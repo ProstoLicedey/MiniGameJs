@@ -8,4 +8,5 @@ export declare class GameController {
         id: string;
     }>;
     move(id: string, board: gameSession.Board): Promise<GameDto | undefined>;
+    getGame(id: string): Promise<GameDto>;
 }

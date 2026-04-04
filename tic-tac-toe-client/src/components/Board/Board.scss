@@ -1,0 +1,28 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 92px);
+  gap: 10px;
+  justify-content: center;
+}
+
+.board__cell {
+  width: 92px;
+  height: 92px;
+  border: 1px solid #d0d6e0;
+  border-radius: 14px;
+  background: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.08s ease, background-color 0.2s ease;
+}
+
+.board__cell:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #f5f8ff;
+}
+
+.board__cell:disabled {
+  cursor: default;
+  color: #2d3748;
+}

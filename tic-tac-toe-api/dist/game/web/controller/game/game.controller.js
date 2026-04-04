@@ -70,6 +70,13 @@ let GameController = class GameController {
             return web_mapper_1.WebMapper.toDto(game);
         }
     }
+    async getGame(id) {
+        const game = await this.gameService.getGameById(id);
+        if (!game) {
+            throw new common_1.NotFoundException('Игра не найдена');
+        }
+        return web_mapper_1.WebMapper.toDto(game);
+    }
 };
 exports.GameController = GameController;
 __decorate([
@@ -86,6 +93,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Array]),
     __metadata("design:returntype", Promise)
 ], GameController.prototype, "move", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], GameController.prototype, "getGame", null);
 exports.GameController = GameController = __decorate([
     (0, common_1.Controller)('game'),
     __metadata("design:paramtypes", [TicTacToe_service_1.GameService])

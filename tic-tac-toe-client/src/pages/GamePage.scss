@@ -1,0 +1,29 @@
+.game-page {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 24px;
+  text-align: center;
+}
+
+.game-page h1 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.game-page__status {
+  margin-bottom: 16px;
+  color: #334155;
+}
+
+.game-page__error {
+  color: #e11d48;
+}
+
+.game-page__actions {
+  margin-top: 20px;
+}
+
+.game-page__actions a {
+  color: #2563eb;
+  text-decoration: none;
+}

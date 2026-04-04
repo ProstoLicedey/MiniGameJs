@@ -4,6 +4,12 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const corsOrigins = process.env.CORS_ORIGIN?.split(',').map((s) => s.trim()).filter(Boolean);
+    app.enableCors({
+        origin: corsOrigins?.length ? corsOrigins : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type'],
+    });
     await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

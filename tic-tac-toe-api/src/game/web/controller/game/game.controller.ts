@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import * as gameSession from 'src/game/domain/model/gameSession';
 import { GameService } from 'src/game/domain/service/TicTacToe.service';
 import { GameDto } from '../../model/dto.model';
@@ -25,5 +25,15 @@ export class GameController {
       await this.gameService.saveGame(game);
       return WebMapper.toDto(game);
     }
+  }
+
+  @Get(':id')
+  async getGame(@Param('id') id: string): Promise<GameDto> {
+    const game = await this.gameService.getGameById(id);
+    if (!game) {
+      throw new NotFoundException('Игра не найдена');
+    }
+
+    return WebMapper.toDto(game);
   }
 }
