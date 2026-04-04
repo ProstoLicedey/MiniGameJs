@@ -1,4 +1,4 @@
-import type { Board, CreateGameResponse, GameDto } from '../types/game';
+import type { Board, CreateGameResponse, GameDto, GameMode } from '../types/game';
 
 function gameBaseUrl(): string {
   const base = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
@@ -23,8 +23,9 @@ async function parseError(response: Response): Promise<string> {
   return `HTTP ${response.status}`;
 }
 
-export async function createGame(): Promise<CreateGameResponse> {
-  const response = await fetch(gameBaseUrl());
+export async function createGame(options?: { mode?: GameMode }): Promise<CreateGameResponse> {
+  const query = options?.mode === 'two_player' ? '?mode=two_player' : '';
+  const response = await fetch(`${gameBaseUrl()}${query}`);
   if (!response.ok) {
     throw new Error(await parseError(response));
   }

@@ -11,6 +11,7 @@ class WebMapper {
         const dto = new dto_model_1.GameDto();
         dto.id = game.id;
         dto.board = game.board;
+        dto.mode = game.mode;
         return dto;
     }
 }

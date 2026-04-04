@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 let GameEntity = class GameEntity {
     id;
     board;
+    mode;
 };
 exports.GameEntity = GameEntity;
 __decorate([
@@ -27,6 +28,10 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], GameEntity.prototype, "board", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, default: 'vs_ai' }),
+    __metadata("design:type", String)
+], GameEntity.prototype, "mode", void 0);
 exports.GameEntity = GameEntity = __decorate([
     (0, typeorm_1.Entity)('games')
 ], GameEntity);

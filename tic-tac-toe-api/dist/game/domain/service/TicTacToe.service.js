@@ -13,7 +13,6 @@ exports.GameService = void 0;
 const common_1 = require("@nestjs/common");
 const game_repository_1 = require("../../datasource/repository/game.repository");
 const gameSession_1 = require("../model/gameSession");
-const datasourse_mapper_1 = require("../../datasource/mapper/datasourse.mapper");
 const HUMAN = 1;
 const COMPUTER = 0;
 let GameService = class GameService {
@@ -21,9 +20,8 @@ let GameService = class GameService {
     constructor(repo) {
         this.repo = repo;
     }
-    initGame() {
-        const game = new gameSession_1.GameSession();
-        return game;
+    initGame(mode = 'vs_ai') {
+        return new gameSession_1.GameSession(undefined, undefined, mode);
     }
     nextMove(game) {
         const boardCopy = game.board.map(row => [...row]);
@@ -32,9 +30,7 @@ let GameService = class GameService {
             return game;
         }
         boardCopy[bestMove.row][bestMove.col] = COMPUTER;
-        const updatedGame = new gameSession_1.GameSession(undefined, boardCopy);
-        updatedGame.id = game.id;
-        return updatedGame;
+        return new gameSession_1.GameSession(game.id, boardCopy, game.mode);
     }
     async boardValidate(game) {
         const DBGame = await this.repo.getById(game.id);
@@ -44,7 +40,10 @@ let GameService = class GameService {
         if (this.isGameOver(DBGame)) {
             throw new common_1.BadRequestException('Игра уже окончена');
         }
-        if (!this.isBoardCheck(DBGame.board, game.board)) {
+        const boardOk = DBGame.mode === 'two_player'
+            ? this.isBoardCheckTwoPlayer(DBGame.board, game.board)
+            : this.isBoardCheckVsAi(DBGame.board, game.board);
+        if (!boardOk) {
             throw new common_1.BadRequestException({
                 message: 'Неверное состояние доски',
                 board: DBGame.board,
@@ -52,7 +51,43 @@ let GameService = class GameService {
         }
         return true;
     }
-    isBoardCheck(a, b) {
+    countFilled(board) {
+        let n = 0;
+        for (const row of board) {
+            for (const cell of row) {
+                if (cell !== null)
+                    n++;
+            }
+        }
+        return n;
+    }
+    isBoardCheckTwoPlayer(db, next) {
+        if (db.length !== next.length) {
+            return false;
+        }
+        let changes = 0;
+        let newSymbol = null;
+        for (let i = 0; i < db.length; i++) {
+            if (db[i].length !== next[i].length)
+                return false;
+            for (let j = 0; j < db[i].length; j++) {
+                if (db[i][j] === next[i][j])
+                    continue;
+                if (db[i][j] !== null || next[i][j] === null)
+                    return false;
+                if (next[i][j] !== HUMAN && next[i][j] !== COMPUTER)
+                    return false;
+                changes++;
+                newSymbol = next[i][j];
+            }
+        }
+        if (changes !== 1 || newSymbol === null)
+            return false;
+        const filled = this.countFilled(db);
+        const expected = filled % 2 === 0 ? HUMAN : COMPUTER;
+        return newSymbol === expected;
+    }
+    isBoardCheckVsAi(a, b) {
         if (a.length != b.length) {
             return false;
         }
@@ -74,7 +109,7 @@ let GameService = class GameService {
         return this.checkWinner(game.board) !== null || this.isBoardFull(game.board);
     }
     async saveGame(game) {
-        await this.repo.save(datasourse_mapper_1.GameMapper.toEntity(game));
+        await this.repo.save(game);
     }
     getGameById(id) {
         return this.repo.getById(id);

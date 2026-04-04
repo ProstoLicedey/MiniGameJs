@@ -40,9 +40,13 @@ export function GamePage() {
       setError(null);
       try {
         const response = await getGame(gameId);
-        if (!cancelled) {
-          setBoard(response.board);
+        if (cancelled) return;
+        const mode = response.mode ?? 'vs_ai';
+        if (mode === 'two_player') {
+          navigate(`/local/${gameId}`, { replace: true });
+          return;
         }
+        setBoard(response.board);
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Не удалось загрузить игру');
@@ -59,7 +63,7 @@ export function GamePage() {
     return () => {
       cancelled = true;
     };
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   const onCellClick = async (row: number, col: number) => {
     if (!gameId || loading || isGameFinished) return;

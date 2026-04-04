@@ -71,6 +71,7 @@ describe('GameRepository (интеграционные тесты с БД)', () 
     expect(result).not.toBeNull();
     expect(result!.id).toBe(gameId);
     expect(result!.board).toEqual(board);
+    expect(result!.mode).toBe('vs_ai');
   });
 
   it('должен вернуть null при получении несуществующей игры по id', async () => {

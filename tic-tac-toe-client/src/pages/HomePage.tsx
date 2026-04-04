@@ -8,7 +8,7 @@ export function HomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const startGame = async () => {
+  const startVsComputer = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -21,14 +21,34 @@ export function HomePage() {
     }
   };
 
+  const startTwoPlayer = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { id } = await createGame({ mode: 'two_player' });
+      navigate(`/local/${id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Не удалось создать игру');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="home-page">
       <h1>Крестики-нолики</h1>
-      <p>Ты играешь за X, компьютер играет за O.</p>
+      <p className="home-page__intro">
+        Выбери режим: против компьютера или два игрока за одним экраном (партия сохраняется на сервере).
+      </p>
       {error && <p className="home-page__error">{error}</p>}
-      <button type="button" onClick={startGame} disabled={loading}>
-        {loading ? 'Создаем игру...' : 'Начать новую игру'}
-      </button>
+      <div className="home-page__modes">
+        <button type="button" onClick={startVsComputer} disabled={loading}>
+          {loading ? 'Создаем игру...' : 'Против компьютера'}
+        </button>
+        <button type="button" className="home-page__button-secondary" onClick={startTwoPlayer} disabled={loading}>
+          Два игрока
+        </button>
+      </div>
     </main>
   );
 }

@@ -1,1 +1,1 @@
-{"version":3,"file":"dto.model.js","sourceRoot":"","sources":["../../../../src/game/web/model/dto.model.ts"],"names":[],"mappings":";;;AAEA,MAAa,OAAO;IAClB,EAAE,CAAS;IACX,KAAK,CAAO;CACb;AAHD,0BAGC"}
+{"version":3,"file":"dto.model.js","sourceRoot":"","sources":["../../../../src/game/web/model/dto.model.ts"],"names":[],"mappings":";;;AAEA,MAAa,OAAO;IAClB,EAAE,CAAS;IACX,KAAK,CAAQ;IACb,IAAI,CAAW;CAChB;AAJD,0BAIC"}

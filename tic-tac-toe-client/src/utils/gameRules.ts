@@ -34,10 +34,33 @@ export function getGameResult(board: Board): GameResult {
   return 'playing';
 }
 
+export type TwoPlayerGameResult = 'playing' | 'player_x' | 'player_o' | 'draw';
+
+export function getTwoPlayerGameResult(board: Board): TwoPlayerGameResult {
+  const value = winner(board);
+  if (value === 1) return 'player_x';
+  if (value === 0) return 'player_o';
+  if (isBoardFull(board)) return 'draw';
+  return 'playing';
+}
+
 export function createEmptyBoard(): Board {
   return [
     [null, null, null],
     [null, null, null],
     [null, null, null],
   ];
+}
+
+/** Чей ход в режиме двух игроков: X (1) и O (0) по очереди. */
+export function nextTwoPlayerSymbol(board: Board): 0 | 1 {
+  let x = 0;
+  let o = 0;
+  for (const row of board) {
+    for (const cell of row) {
+      if (cell === 1) x++;
+      if (cell === 0) o++;
+    }
+  }
+  return x === o ? 1 : 0;
 }

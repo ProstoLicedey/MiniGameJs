@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { GameRepository } from "src/game/datasource/repository/game.repository";
-import { Board, GameSession } from "../model/gameSession";
-import { GameMapper } from "src/game/datasource/mapper/datasourse.mapper";
+import { Board, GameMode, GameSession } from "../model/gameSession";
 
 
 const HUMAN = 1;
@@ -12,10 +11,8 @@ export class GameService {
   constructor(private repo: GameRepository) { }
 
 
-  initGame(): GameSession {
-    const game = new GameSession();
-
-    return game;
+  initGame(mode: GameMode = 'vs_ai'): GameSession {
+    return new GameSession(undefined, undefined, mode);
   }
 
   nextMove(game: GameSession): GameSession {
@@ -28,10 +25,7 @@ export class GameService {
 
     boardCopy[bestMove.row][bestMove.col] = COMPUTER;
 
-    const updatedGame = new GameSession(undefined, boardCopy);
-    updatedGame.id = game.id;
-
-    return updatedGame;
+    return new GameSession(game.id, boardCopy, game.mode);
   }
 
   async boardValidate(game: GameSession): Promise<boolean> {
@@ -43,7 +37,11 @@ export class GameService {
     if (this.isGameOver(DBGame)) {
       throw new BadRequestException('Игра уже окончена');
     }
-    if (!this.isBoardCheck(DBGame.board, game.board)) {
+    const boardOk =
+      DBGame.mode === 'two_player'
+        ? this.isBoardCheckTwoPlayer(DBGame.board, game.board)
+        : this.isBoardCheckVsAi(DBGame.board, game.board);
+    if (!boardOk) {
       throw new BadRequestException({
         message: 'Неверное состояние доски',
         board: DBGame.board,
@@ -54,7 +52,40 @@ export class GameService {
     return true;
   }
 
-  private isBoardCheck(a: Board, b: Board): boolean { //проверка правильности кода
+  private countFilled(board: Board): number {
+    let n = 0;
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell !== null) n++;
+      }
+    }
+    return n;
+  }
+
+  /** Один ход: null → 1 или 0 по очереди (X, затем O). */
+  private isBoardCheckTwoPlayer(db: Board, next: Board): boolean {
+    if (db.length !== next.length) {
+      return false;
+    }
+    let changes = 0;
+    let newSymbol: number | null = null;
+    for (let i = 0; i < db.length; i++) {
+      if (db[i].length !== next[i].length) return false;
+      for (let j = 0; j < db[i].length; j++) {
+        if (db[i][j] === next[i][j]) continue;
+        if (db[i][j] !== null || next[i][j] === null) return false;
+        if (next[i][j] !== HUMAN && next[i][j] !== COMPUTER) return false;
+        changes++;
+        newSymbol = next[i][j] as number;
+      }
+    }
+    if (changes !== 1 || newSymbol === null) return false;
+    const filled = this.countFilled(db);
+    const expected = filled % 2 === 0 ? HUMAN : COMPUTER;
+    return newSymbol === expected;
+  }
+
+  private isBoardCheckVsAi(a: Board, b: Board): boolean { //проверка правильности кода
     if (a.length != b.length) {
       return false;
     }
@@ -77,7 +108,7 @@ export class GameService {
   }
 
   async saveGame(game: GameSession): Promise<void> { // сохранение в бд
-    await this.repo.save(GameMapper.toEntity(game));
+    await this.repo.save(game);
   }
 
   getGameById(id: string): Promise<GameSession | null> { // поиск игры в БД

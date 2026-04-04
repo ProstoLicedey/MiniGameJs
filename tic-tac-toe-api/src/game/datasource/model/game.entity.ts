@@ -12,4 +12,7 @@ export class GameEntity {
     nullable: false,
   })
   board: Board;
+
+  @Column({ type: 'varchar', length: 20, default: 'vs_ai' })
+  mode: string;
 }

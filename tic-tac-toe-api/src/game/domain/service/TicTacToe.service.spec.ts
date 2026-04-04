@@ -178,5 +178,62 @@ describe('GameService', () => {
 
       expect(result).toBe(true);
     });
+
+    it('two_player: валидный ход X на пустой доске', async () => {
+      const gameId = uuidv4();
+      const dbBoard: GameSession['board'] = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+      ];
+      const requestBoard: GameSession['board'] = [
+        [null, null, null],
+        [null, 1, null],
+        [null, null, null],
+      ];
+      repo.getById.mockResolvedValue(new GameSession(gameId, dbBoard, 'two_player'));
+
+      await expect(
+        service.boardValidate(new GameSession(gameId, requestBoard)),
+      ).resolves.toBe(true);
+    });
+
+    it('two_player: валидный ход O после X', async () => {
+      const gameId = uuidv4();
+      const dbBoard: GameSession['board'] = [
+        [null, null, null],
+        [null, 1, null],
+        [null, null, null],
+      ];
+      const requestBoard: GameSession['board'] = [
+        [0, null, null],
+        [null, 1, null],
+        [null, null, null],
+      ];
+      repo.getById.mockResolvedValue(new GameSession(gameId, dbBoard, 'two_player'));
+
+      await expect(
+        service.boardValidate(new GameSession(gameId, requestBoard)),
+      ).resolves.toBe(true);
+    });
+
+    it('two_player: неверный ход — не та очередь (два X подряд)', async () => {
+      const gameId = uuidv4();
+      const dbBoard: GameSession['board'] = [
+        [null, null, null],
+        [null, 1, null],
+        [null, null, null],
+      ];
+      const requestBoard: GameSession['board'] = [
+        [null, null, null],
+        [null, 1, null],
+        [null, null, 1],
+      ];
+      repo.getById.mockResolvedValue(new GameSession(gameId, dbBoard, 'two_player'));
+
+      await expect(
+        service.boardValidate(new GameSession(gameId, requestBoard)),
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 });
