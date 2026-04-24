@@ -10,6 +10,7 @@ exports.WebDomainModule = void 0;
 const common_1 = require("@nestjs/common");
 const domain_module_1 = require("../domain/domain.module");
 const game_controller_1 = require("./controller/game/game.controller");
+const battleship_controller_1 = require("./controller/battleship/battleship.controller");
 let WebDomainModule = class WebDomainModule {
 };
 exports.WebDomainModule = WebDomainModule;
@@ -18,7 +19,7 @@ exports.WebDomainModule = WebDomainModule = __decorate([
         imports: [
             domain_module_1.DomainModule
         ],
-        controllers: [game_controller_1.GameController],
+        controllers: [game_controller_1.GameController, battleship_controller_1.BattleshipController],
     })
 ], WebDomainModule);
 //# sourceMappingURL=domain.module.js.map

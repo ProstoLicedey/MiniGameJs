@@ -12,6 +12,8 @@ const game_repository_1 = require("./repository/game.repository");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
 const game_entity_1 = require("./model/game.entity");
+const battleship_entity_1 = require("./model/battleship.entity");
+const battleship_repository_1 = require("./repository/battleship.repository");
 let DatasourceModule = class DatasourceModule {
 };
 exports.DatasourceModule = DatasourceModule;
@@ -32,17 +34,17 @@ exports.DatasourceModule = DatasourceModule = __decorate([
                         username: configService.get('DB_USERNAME'),
                         password: password,
                         database: configService.get('DB_DATABASE'),
-                        entities: [game_entity_1.GameEntity],
+                        entities: [game_entity_1.GameEntity, battleship_entity_1.BattleshipEntity],
                         synchronize: true,
                         logging: true,
                     };
                 },
                 inject: [config_1.ConfigService],
             }),
-            typeorm_1.TypeOrmModule.forFeature([game_entity_1.GameEntity]),
+            typeorm_1.TypeOrmModule.forFeature([game_entity_1.GameEntity, battleship_entity_1.BattleshipEntity]),
         ],
-        providers: [game_repository_1.GameRepository],
-        exports: [game_repository_1.GameRepository],
+        providers: [game_repository_1.GameRepository, battleship_repository_1.BattleshipRepository],
+        exports: [game_repository_1.GameRepository, battleship_repository_1.BattleshipRepository],
     })
 ], DatasourceModule);
 //# sourceMappingURL=datasource.module.js.map

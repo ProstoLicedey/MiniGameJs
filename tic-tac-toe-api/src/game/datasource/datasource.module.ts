@@ -3,6 +3,8 @@ import { GameRepository } from './repository/game.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GameEntity } from './model/game.entity';
+import { BattleshipEntity } from './model/battleship.entity';
+import { BattleshipRepository } from './repository/battleship.repository';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { GameEntity } from './model/game.entity';
           username: configService.get<string>('DB_USERNAME'),
           password: password,
           database: configService.get<string>('DB_DATABASE'),
-          entities: [GameEntity],
+          entities: [GameEntity, BattleshipEntity],
           synchronize: true,
           logging: true,
         };
@@ -28,9 +30,9 @@ import { GameEntity } from './model/game.entity';
       inject: [ConfigService],
     }),
 
-    TypeOrmModule.forFeature([GameEntity]),
+    TypeOrmModule.forFeature([GameEntity, BattleshipEntity]),
   ],
-  providers: [GameRepository],
-  exports: [GameRepository],
+  providers: [GameRepository, BattleshipRepository],
+  exports: [GameRepository, BattleshipRepository],
 })
 export class DatasourceModule { }

@@ -10,6 +10,7 @@ exports.DomainModule = void 0;
 const common_1 = require("@nestjs/common");
 const datasource_module_1 = require("../datasource/datasource.module");
 const TicTacToe_service_1 = require("./service/TicTacToe.service");
+const Battleship_service_1 = require("./service/Battleship.service");
 let DomainModule = class DomainModule {
 };
 exports.DomainModule = DomainModule;
@@ -18,8 +19,8 @@ exports.DomainModule = DomainModule = __decorate([
         imports: [
             datasource_module_1.DatasourceModule
         ],
-        providers: [TicTacToe_service_1.GameService],
-        exports: [TicTacToe_service_1.GameService],
+        providers: [TicTacToe_service_1.GameService, Battleship_service_1.BattleshipService],
+        exports: [TicTacToe_service_1.GameService, Battleship_service_1.BattleshipService],
     })
 ], DomainModule);
 //# sourceMappingURL=domain.module.js.map

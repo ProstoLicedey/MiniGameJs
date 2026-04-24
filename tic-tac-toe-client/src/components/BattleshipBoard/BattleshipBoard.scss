@@ -1,0 +1,93 @@
+.battleship-board {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.battleship-board__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #334155;
+  text-align: center;
+}
+
+.battleship-board__grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: clamp(3px, 0.6vw, 6px);
+  padding: clamp(8px, 1.2vw, 14px);
+  background: #cbd5e1;
+  border-radius: 12px;
+  width: min(92vw, 720px);
+  max-width: 720px;
+  min-width: 280px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.battleship-board__cell {
+  border: none;
+  border-radius: clamp(4px, 0.8vw, 8px);
+  padding: 0;
+  min-width: 0;
+  min-height: 22px;
+  cursor: default;
+  transition: transform 0.08s ease, filter 0.08s ease;
+
+  &--water {
+    background: #e2e8f0;
+  }
+
+  &--ship {
+    background: #475569;
+  }
+
+  &--hit {
+    background: #dc2626;
+  }
+
+  &--miss {
+    background: #94a3b8;
+  }
+
+  &--fog {
+    background: #64748b;
+  }
+
+  &--radar-miss {
+    background: #cbd5e1;
+    box-shadow: inset 0 0 0 2px #64748b;
+  }
+
+  &--radar-hit {
+    background: #dc2626;
+  }
+
+  &--ship-preview {
+    background: #334155;
+  }
+
+  &--ghost-ok {
+    background: #4ade80;
+    box-shadow: inset 0 0 0 2px #16a34a;
+  }
+
+  &--ghost-bad {
+    background: #f87171;
+    box-shadow: inset 0 0 0 2px #b91c1c;
+  }
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: scale(1.02);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.85;
+    cursor: default;
+  }
+}

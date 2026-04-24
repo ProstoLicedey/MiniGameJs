@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GameEntity } from './game/datasource/model/game.entity';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GameController } from './game/web/controller/game/game.controller';
+import { BattleshipController } from './game/web/controller/battleship/battleship.controller';
 import { GameService } from './game/domain/service/TicTacToe.service';
-import { GameRepository } from './game/datasource/repository/game.repository';
+import { BattleshipService } from './game/domain/service/Battleship.service';
 import { DatasourceModule } from './game/datasource/datasource.module';
 
 @Module({
@@ -15,7 +14,7 @@ import { DatasourceModule } from './game/datasource/datasource.module';
     }),
     DatasourceModule
   ],
-  controllers: [GameController],
-  providers: [GameService],
+  controllers: [GameController, BattleshipController],
+  providers: [GameService, BattleshipService],
 })
 export class AppModule { }

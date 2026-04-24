@@ -56,3 +56,22 @@
   margin-top: 10px;
   color: #e11d48;
 }
+
+.home-page__link-battleship {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0ea5e9;
+  border-radius: 12px;
+  background: #fff;
+  color: #0284c7;
+  padding: 12px 18px;
+  min-width: 220px;
+  text-decoration: none;
+  font: inherit;
+  font-weight: 500;
+}
+
+.home-page__link-battleship:hover {
+  background: #f0f9ff;
+}

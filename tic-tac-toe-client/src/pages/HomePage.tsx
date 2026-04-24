@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createGame } from '../api/gameApi';
 import './HomePage.scss';
 
@@ -48,6 +48,9 @@ export function HomePage() {
         <button type="button" className="home-page__button-secondary" onClick={startTwoPlayer} disabled={loading}>
           Два игрока
         </button>
+        <Link to="/battleship" className="home-page__link-battleship">
+          Морской бой (два устройства)
+        </Link>
       </div>
     </main>
   );

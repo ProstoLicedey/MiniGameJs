@@ -10,7 +10,9 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const game_controller_1 = require("./game/web/controller/game/game.controller");
+const battleship_controller_1 = require("./game/web/controller/battleship/battleship.controller");
 const TicTacToe_service_1 = require("./game/domain/service/TicTacToe.service");
+const Battleship_service_1 = require("./game/domain/service/Battleship.service");
 const datasource_module_1 = require("./game/datasource/datasource.module");
 let AppModule = class AppModule {
 };
@@ -24,8 +26,8 @@ exports.AppModule = AppModule = __decorate([
             }),
             datasource_module_1.DatasourceModule
         ],
-        controllers: [game_controller_1.GameController],
-        providers: [TicTacToe_service_1.GameService],
+        controllers: [game_controller_1.GameController, battleship_controller_1.BattleshipController],
+        providers: [TicTacToe_service_1.GameService, Battleship_service_1.BattleshipService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
